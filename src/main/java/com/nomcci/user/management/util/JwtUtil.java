@@ -26,18 +26,17 @@ public class JwtUtil {
     /**
      * Genera un token JWT para el usuario.
      *
-     * @param username Nombre de usuario para el token.
+     * @param userId ID del usuario.
      * @return Token JWT.
      */
-    public String generateToken(String username, String role) {
+    public String generateToken(Long userId) {
         try {
             long expirationTime = 3600000; // 1 hora en milisegundos
             Date now = new Date();
             Date expirationDate = new Date(now.getTime() + expirationTime);
 
             return Jwts.builder()
-                    .setSubject(username)
-                    .claim("role", role)
+                    .setSubject(String.valueOf(userId)) // Usar solo el ID como subject
                     .setIssuedAt(now)
                     .setExpiration(expirationDate)
                     .signWith(privateKey, SignatureAlgorithm.RS256)
@@ -46,6 +45,7 @@ public class JwtUtil {
             throw new RuntimeException("Error al generar el token JWT", e);
         }
     }
+
 
 
     /**

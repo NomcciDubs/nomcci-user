@@ -1,7 +1,7 @@
 package com.nomcci.user.management.util;
 
 import io.jsonwebtoken.Claims;
-import org.jetbrains.annotations.NotNull;
+import javax.validation.constraints.NotNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -42,8 +42,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                     throw new RuntimeException("El token ha expirado");
                 }
 
-                String username = claims.getSubject();
-                UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+                String userId = claims.getSubject();
+
+                UserDetails userDetails = userDetailsService.loadUserByUsername(userId);
 
                 UsernamePasswordAuthenticationToken authenticationToken =
                         new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
@@ -62,5 +63,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         filterChain.doFilter(request, response);
     }
+
 
 }

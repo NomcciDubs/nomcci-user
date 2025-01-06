@@ -22,18 +22,13 @@ public class AuthService {
     }
 
     public String authenticate(String email, String password) {
-        // Buscar el usuario por email
         Optional<User> userOptional = userRepository.findByEmail(email);
 
         if (userOptional.isPresent()) {
             User user = userOptional.get();
 
-            // Validar la contraseña
             if (passwordEncoder.matches(password, user.getPassword())) {
-
-                String role = String.valueOf(user.getRole());
-
-                return jwtUtil.generateToken(user.getEmail(), role);
+                return jwtUtil.generateToken(user.getId());
             } else {
                 throw new RuntimeException("La contraseña es incorrecta");
             }
