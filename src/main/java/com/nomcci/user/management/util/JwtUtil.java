@@ -39,6 +39,7 @@ public class JwtUtil {
                     .setSubject(String.valueOf(userId)) // Usar solo el ID como subject
                     .setIssuedAt(now)
                     .setExpiration(expirationDate)
+                    .setIssuer("http://localhost")
                     .signWith(privateKey, SignatureAlgorithm.RS256)
                     .compact();
         } catch (JwtException e) {
