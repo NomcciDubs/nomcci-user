@@ -16,11 +16,9 @@ import java.util.Map;
 public class AuthController {
 
     private final AuthService authService;
-    private final PublicKey publicKey;
 
-    public AuthController(AuthService authService, RsaKeyUtil rsaKeyUtil) {
+    public AuthController(AuthService authService) {
         this.authService = authService;
-        this.publicKey = rsaKeyUtil.loadPublicKey();
     }
 
     @PostMapping("/register")
