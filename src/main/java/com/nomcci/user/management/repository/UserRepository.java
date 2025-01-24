@@ -8,7 +8,6 @@ import org.springframework.data.domain.Pageable;
 
 public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findByEmail(String email);
-    //Page<User> findByEmailContainingIgnoreCase(String email, Pageable pageable);
     Page<User> findByFirstNameContainingIgnoreCaseOrLastNameContainingIgnoreCase(String firstName, String lastName, Pageable pageable);
 
 
