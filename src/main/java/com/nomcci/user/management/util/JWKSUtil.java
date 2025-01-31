@@ -17,9 +17,6 @@ public class JWKSUtil {
 
     private static final Logger logger = Logger.getLogger(JWKSUtil.class.getName());
 
-    // Ruta del archivo de la llave pública
-    private static final String PUBLIC_KEY_FILE = "path/to/public-key.pem";
-
     /**
      * Genera el JWKS en formato JSON a partir de la llave pública.
      *
@@ -27,7 +24,7 @@ public class JWKSUtil {
      */
     public static Map<String, Object> generateJWKS() {
         try {
-            PublicKey publicKey = RsaKeyUtil.loadPublicKey(); // Carga la llave pública
+            PublicKey publicKey = RsaKeyUtil.loadPublicKey();
             String kid = generateKID(publicKey); // Genera el KID dinámico basado en el hash de la llave pública
             String modulus = getModulus(publicKey);
             String exponent = getExponent(publicKey);

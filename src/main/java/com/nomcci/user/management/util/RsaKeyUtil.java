@@ -7,6 +7,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.security.*;
+import java.security.interfaces.RSAPublicKey;
 import java.util.Base64;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -121,6 +122,30 @@ public class RsaKeyUtil {
 
             return KeyFactory.getInstance("RSA")
                     .generatePublic(new java.security.spec.X509EncodedKeySpec(decodedKey));
+        } catch (Exception e) {
+            logger.log(Level.SEVERE, "Error al cargar la clave pública", e);
+            throw new RuntimeException("Error al cargar la clave pública", e);
+        }
+    }
+
+    public static RSAPublicKey loadRSAPublicKey() {
+        try {
+            byte[] keyBytes = Files.readAllBytes(new File(PUBLIC_KEY_FILE).toPath());
+            String keyString = new String(keyBytes)
+                    .replaceAll("-----BEGIN PUBLIC KEY-----", "")
+                    .replaceAll("-----END PUBLIC KEY-----", "")
+                    .replaceAll("\\s+", "");
+            byte[] decodedKey = Base64.getDecoder().decode(keyString);
+
+            PublicKey publicKey = KeyFactory.getInstance("RSA")
+                    .generatePublic(new java.security.spec.X509EncodedKeySpec(decodedKey));
+
+            // Verifica si la clave es una instancia de RSAPublicKey
+            if (!(publicKey instanceof RSAPublicKey)) {
+                throw new IllegalArgumentException("La clave pública no es una instancia de RSAPublicKey");
+            }
+
+            return (RSAPublicKey) publicKey;
         } catch (Exception e) {
             logger.log(Level.SEVERE, "Error al cargar la clave pública", e);
             throw new RuntimeException("Error al cargar la clave pública", e);

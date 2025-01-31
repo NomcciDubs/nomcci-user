@@ -5,6 +5,7 @@ import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.security.PrivateKey;
@@ -16,6 +17,9 @@ public class JwtUtil {
 
     private final PrivateKey privateKey;
     private final PublicKey publicKey;
+
+    @Value("${issuer.url}")
+    private String issuerUrl;
 
     public JwtUtil() {
         RsaKeyUtil.generateKeyPair(); // Genera las claves si no existen
@@ -31,40 +35,19 @@ public class JwtUtil {
      */
     public String generateToken(Long userId) {
         try {
-            long expirationTime = 3600000; // 1 hora en milisegundos
+            long expirationTime = 3600000;
             Date now = new Date();
             Date expirationDate = new Date(now.getTime() + expirationTime);
 
             return Jwts.builder()
-                    .setSubject(String.valueOf(userId)) // Usar solo el ID como subject
+                    .setSubject(String.valueOf(userId))
                     .setIssuedAt(now)
                     .setExpiration(expirationDate)
-                    .setIssuer("http://localhost")
+                    .setIssuer(issuerUrl)
                     .signWith(privateKey, SignatureAlgorithm.RS256)
                     .compact();
         } catch (JwtException e) {
             throw new RuntimeException("Error al generar el token JWT", e);
-        }
-    }
-
-
-
-    /**
-     * Valida el token JWT y obtiene los claims.
-     *
-     * @param token Token JWT a validar.
-     * @return Claims (informacion dentro del token).
-     */
-    public Claims validateToken(String token) {
-        try {
-            Jws<Claims> claimsJws = Jwts.parserBuilder()
-                    .setSigningKey(publicKey)
-                    .build()
-                    .parseClaimsJws(token);
-
-            return claimsJws.getBody();
-        } catch (JwtException e) {
-            throw new RuntimeException("Token JWT invalido o mal formado", e);
         }
     }
 
