@@ -52,7 +52,10 @@ dependencies {
     implementation 'org.springframework.security:spring-security-oauth2-jose'
 
     // AWS
-    implementation 'io.awspring.cloud:spring-cloud-starter-aws-parameter-store-config:2.3.1'
+    implementation 'io.awspring.cloud:spring-cloud-aws:3.3.0'
+
+    implementation 'io.awspring.cloud:spring-cloud-aws-starter-parameter-store:3.3.0'
+
 
 }
 
